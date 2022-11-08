@@ -4,7 +4,10 @@
   </div>
   <div v-else class="flex flex-col">
     <div class="flex justify-between items-center mx-8 my-4">
-      <h1 class="text-6xl text-center text-gray-800">{{pad.title}}</h1>
+      <div>
+        <div class="text-6xl text-start text-gray-800">{{pad.title}}</div>
+        <a class="text-sm text-start text-gray-400">{{actionHashString}}</a>
+      </div>
       
       <div>
         <div class="flex justify-between">
@@ -33,7 +36,9 @@ import Header from '@editorjs/header';
 import Table from '@editorjs/table';
 import NestedList from '@editorjs/nested-list';
 import ImageTool from '@editorjs/image';
+import SimpleImage from '@editorjs/simple-image';
 import Delimiter from '@editorjs/delimiter';
+import ParagraphTool from '../lib/paragraph-block.js';
 import fromUnixTime from 'date-fns/fromUnixTime';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow'
 
@@ -127,6 +132,10 @@ export default defineComponent({
             class: NestedList,
             inlineToolbar: true,
           },
+          paragraph: {
+            class: ParagraphTool,
+          },
+          /*
           image: {
             class: ImageTool,
             config: {
@@ -139,7 +148,8 @@ export default defineComponent({
                 }
               }
             }
-          },
+          },*/
+          image: SimpleImage,
           delimiter: Delimiter,
           table: Table,
         }, 
