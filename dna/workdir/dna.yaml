@@ -1,0 +1,18 @@
+---
+manifest_version: "1"
+name: meta_pad
+integrity:
+  uuid: 00000000-0000-0000-0000-000000000000
+  properties: ~
+  origin_time: 2022-10-27T03:25:03.423Z
+  zomes:
+    - name: pad_integrity
+      bundled: ../../target/wasm32-unknown-unknown/release/pad_integrity.wasm
+
+coordinator:
+  zomes:
+    - name: pad
+      bundled: ../../target/wasm32-unknown-unknown/release/pad.wasm
+      dependencies:
+        - name: pad_integrity
+

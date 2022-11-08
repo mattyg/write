@@ -1,0 +1,17 @@
+---
+manifest_version: "1"
+name: meta-pad
+description: ~
+roles:
+
+  - id: meta_pad
+    provisioning:
+      strategy: create
+      deferred: false
+    dna:
+      bundled: "../dna/workdir/meta_pad.dna"
+      properties: ~
+      uuid: ~
+      version: ~
+      clone_limit: 0
+
