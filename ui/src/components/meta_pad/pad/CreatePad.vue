@@ -1,5 +1,5 @@
 <template>
-  <div class="m-4 flex flex-col justify-start items-center">
+  <div class="m-4 flex flex-col justify-start items-center" @keydown.enter="createPad()">
     <div class="text-2xl mb-4">Create New Pad</div>
 
     <div class="mb-4">
