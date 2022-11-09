@@ -5,8 +5,10 @@
   <div v-else class="flex flex-col bg-yellow-100 pt-14 min-h-screen">
     <div class="flex justify-between items-center mx-8 my-4">
       <div class="my-4">
-        <div class="text-6xl text-start text-gray-800">{{pad.title}}</div>
-        <a class="text-sm text-start text-gray-400">{{actionHashString}}</a>
+        <div class="text-6xl text-start text-gray-800">
+          {{pad.title}}
+          <holo-identicon :hash="actionHashString"></holo-identicon>
+        </div>
       </div>
       
       <div>
@@ -41,6 +43,7 @@ import Delimiter from '@editorjs/delimiter';
 import ParagraphTool from '../lib/paragraph-block.js';
 import fromUnixTime from 'date-fns/fromUnixTime';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow'
+import "@holochain-open-dev/elements/holo-identicon";
 
 interface Data {
   pad: Pad | undefined;
