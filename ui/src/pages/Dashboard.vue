@@ -1,18 +1,6 @@
 <template>
     <div class="m-4">
-
-        <button @click="create_visible = true;" class="bg-green-700 hover:bg-green-800 text-white font-bold shadow rounded-md p-2">Create New Pad</button>
-
-        <div v-show="create_visible">
-            <div class="absolute left-0 top-0 w-screen h-screen bg-gray-800 opacity-70"></div>  
-            <div class="absolute left-0 top-0 w-screen h-screen  flex justify-center items-center">
-                <div class="bg-white opacity-100">
-                    <CreatePad @pad-created="padCreated"/>
-                </div>
-            </div>
-        </div>
-        
-        <div class="flex flex-wrap justify-center space-x-16 my-24" v-if="my_pads_action_hashes.length + all_pads_action_hashes.length > 0">
+        <div v-if="my_pads_action_hashes.length + all_pads_action_hashes.length > 0" class="flex flex-wrap justify-center space-x-16 my-24">
            <PadsList v-if="my_pads_action_hashes.length > 0" :action_hashes="my_pads_action_hashes" title="My Pads" />
            <PadsList v-if="otherPadHashes?.length > 0" :action_hashes="otherPadHashes" title="All Pads" />
         </div>
@@ -28,7 +16,6 @@ import { decode } from '@msgpack/msgpack';
 import { InstalledCell, AppWebsocket, InstalledAppInfo, Record, ActionHash } from '@holochain/client';
 import PadListItem from '../components/meta_pad/pad/PadListItem.vue';
 import PadsList from '../components/meta_pad/pad/PadsList.vue';
-import CreatePad from '../components/meta_pad/pad/CreatePad.vue';
 import { difference } from 'lodash';
 import { serializeHash, deserializeHash } from '@holochain-open-dev/utils';
 
@@ -36,20 +23,17 @@ import { serializeHash, deserializeHash } from '@holochain-open-dev/utils';
 interface Data {
     my_pads_action_hashes: ActionHash[];
     all_pads_action_hashes: ActionHash[];
-    create_visible: boolean;
 }
 
 export default defineComponent({
     components: {
         PadsList,
         PadListItem,
-        CreatePad
     },
     data(): Data {
         return {
             my_pads_action_hashes: [],
             all_pads_action_hashes: [],
-            create_visible: false,
         };
     },
     computed: {
@@ -58,10 +42,6 @@ export default defineComponent({
         }
     },
     methods: {
-        padCreated(actionHash: ActionHash) {
-            this.create_visible = false; 
-            this.$router.push(`/pad/${serializeHash(actionHash)}`);
-        },
         async fetchMyPads() {
             const cellData = this.appInfo.cell_data.find((c: InstalledCell) => c.role_id === 'meta_pad')!;
 

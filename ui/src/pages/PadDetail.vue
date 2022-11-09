@@ -2,9 +2,9 @@
   <div v-if="!pad || !editorjs" style="flex justify-center items-center">
     <mwc-circular-progress indeterminate></mwc-circular-progress>
   </div>
-  <div v-else class="flex flex-col">
+  <div v-else class="flex flex-col bg-yellow-100 pt-14 min-h-screen">
     <div class="flex justify-between items-center mx-8 my-4">
-      <div>
+      <div class="my-4">
         <div class="text-6xl text-start text-gray-800">{{pad.title}}</div>
         <a class="text-sm text-start text-gray-400">{{actionHashString}}</a>
       </div>
@@ -18,7 +18,7 @@
       </div>
     </div>
 
-    <div class="w-full h-full py-4" id="editorjs"  @keyup.enter="saveContent"></div>
+    <div class="w-full" id="editorjs"  @keyup.enter="saveContent"></div>
     
   </div>
 </template>
