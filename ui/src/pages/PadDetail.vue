@@ -164,10 +164,14 @@ export default defineComponent({
       if(newVal && !oldVal) {
         this.setupEditorjs();
       }
+    },
+    actionHashString(newVal, oldVal) {
+      if(newVal) {
+        this.fetchPad();
+      }
     }
   },
-  async mounted() {
-    console.log("actionHashString", this.actionHashString);
+  mounted() {
     this.fetchPad();
   },
   setup() {

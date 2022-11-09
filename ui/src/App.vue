@@ -10,7 +10,6 @@
       </div>
 
       <RouterView />
-    </div>
 
 
     <div v-show="create_visible" class="z-20">
@@ -21,6 +20,7 @@
             </div>
         </div>
     </div>
+  </div>
   </div>
 </template>
 <script lang="ts">
