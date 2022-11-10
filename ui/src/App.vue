@@ -6,7 +6,10 @@
     <div v-else class="flex flex-1 flex-col">
       <div class="fixed w-full bg-black text-white font-bold flex justify-between items-center py-2 px-4 h-12">
         <div class="cursor-pointer text-2xl" @click="$router.push('/');">Write</div>
-        <button @click="create_visible = true;" class="bg-green-700 hover:bg-green-800 text-lg text-white font-bold shadow rounded-md px-2 py-1">Create New Pad</button>
+        <button @click="create_visible = true;" class="bg-green-700 hover:bg-green-800 text-lg text-white font-bold shadow rounded-md px-2 py-1 flex items-center space-x-2">
+          <Icon icon="mdi:pencil" />
+          <div>Create New Pad</div>
+        </button>
       </div>
 
       <RouterView />
@@ -32,12 +35,14 @@ import CreatePad from './components/meta_pad/pad/CreatePad.vue';
 import PadDetail from './pages/PadDetail.vue';
 import { RouterView } from 'vue-router';
 import { serializeHash, deserializeHash } from '@holochain-open-dev/utils';
+import { Icon } from '@iconify/vue';
 
 export default defineComponent({
   components: {
     RouterView,
     CreatePad, 
-    PadDetail
+    PadDetail,
+    Icon,
   },
   data(): {
     appWebsocket: AppWebsocket | undefined;

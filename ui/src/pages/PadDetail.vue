@@ -5,18 +5,25 @@
   <div v-else class="flex flex-col bg-yellow-100 pt-14 min-h-screen">
     <div class="flex justify-between items-center mx-8 my-4">
       <div class="my-4">
-        <div class="text-6xl text-start text-gray-800">
-          {{pad.title}}
-          <holo-identicon :hash="actionHashString"></holo-identicon>
+        <div class="text-start text-gray-800">
+          <div class="text-6xl flex">
+            <div class="mr-4"><holo-identicon :hash="actionHashString"></holo-identicon></div>
+            {{ pad.title }}
+          </div>
+          
         </div>
       </div>
       
       <div>
-        <div class="flex justify-between">
-          <span class="mdi mdi-content-save"></span>
-          <button class="text-md p-2 bg-green-200 hover:bg-green-300" @click="saveContent">Save</button>
+        <div class="flex flex-col items-end">
+          <button class="text-md p-2 text-gray-800 font-bold bg-green-200 hover:bg-green-300 rounded" @click="saveContent">
+            <div class="flex space-x-2">
+              <Icon icon="mdi:content-save-outline" height="24" color="black" />
+              <div>Save</div>
+            </div>
+          </button>
+          <div v-if="pad && lastSaved" class="text-gray-400 text-xs">{{lastSaved}} ago</div>
         </div>
-        <div v-if="pad && lastSaved" class="text-gray-400 text-xs">{{lastSaved}} ago</div>
       </div>
     </div>
 
@@ -44,6 +51,7 @@ import ParagraphTool from '../lib/paragraph-block.js';
 import fromUnixTime from 'date-fns/fromUnixTime';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow'
 import "@holochain-open-dev/elements/holo-identicon";
+import { Icon } from '@iconify/vue';
 
 interface Data {
   pad: Pad | undefined;
@@ -52,6 +60,9 @@ interface Data {
 }
 
 export default defineComponent({
+  components: {
+    Icon,
+  },
   props: {
     actionHashString: {
       type: String,
