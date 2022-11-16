@@ -48,6 +48,8 @@ import ImageTool from '@editorjs/image';
 import SimpleImage from '@editorjs/simple-image';
 import Delimiter from '@editorjs/delimiter';
 import ParagraphTool from '../lib/paragraph-block.js';
+import ImageFromUrlBlock from '../lib/image-url-block.ts';
+import ZomeCallBlock from '../lib/zome-call-block.ts';
 import fromUnixTime from 'date-fns/fromUnixTime';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow'
 import "@holochain-open-dev/elements/holo-identicon";
@@ -149,6 +151,9 @@ export default defineComponent({
           paragraph: {
             class: ParagraphTool,
           },
+          image: {
+            class: ImageFromUrlBlock
+          },
           /*
           image: {
             class: ImageTool,
@@ -163,7 +168,6 @@ export default defineComponent({
               }
             }
           },*/
-          image: SimpleImage,
           delimiter: Delimiter,
           table: Table,
         }, 

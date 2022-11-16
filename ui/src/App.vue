@@ -4,7 +4,7 @@
       <mwc-circular-progress indeterminate></mwc-circular-progress>
     </div>
     <div v-else class="flex flex-1 flex-col">
-      <div class="fixed w-full bg-black text-white font-bold flex justify-between items-center py-2 px-4 h-12">
+      <div class="fixed w-full bg-black text-white font-bold flex justify-between items-center py-2 px-4 h-12 z-30">
         <div class="cursor-pointer text-2xl" @click="$router.push('/');">Write</div>
         <button @click="create_visible = true;" class="bg-green-700 hover:bg-green-800 text-lg text-white font-bold shadow rounded-md px-2 py-1 flex items-center space-x-2">
           <Icon icon="mdi:pencil" />
