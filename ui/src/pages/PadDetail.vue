@@ -44,8 +44,6 @@ import EditorJS from '@editorjs/editorjs';
 import Header from '@editorjs/header'; 
 import Table from '@editorjs/table';
 import NestedList from '@editorjs/nested-list';
-import ImageTool from '@editorjs/image';
-import SimpleImage from '@editorjs/simple-image';
 import Delimiter from '@editorjs/delimiter';
 import ParagraphTool from '../lib/paragraph-block.js';
 import ImageFromUrlBlock from '../lib/image-url-block.ts';
@@ -154,20 +152,6 @@ export default defineComponent({
           image: {
             class: ImageFromUrlBlock
           },
-          /*
-          image: {
-            class: ImageTool,
-            config: {
-              uploader: {
-                uploadByFile(file) {
-                  console.log('Uploading from File')
-                },
-                uploadByUrl(url) {
-                  console.log('Fetching from URL')
-                }
-              }
-            }
-          },*/
           delimiter: Delimiter,
           table: Table,
         }, 
