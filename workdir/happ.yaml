@@ -3,15 +3,17 @@ manifest_version: "1"
 name: meta-pad
 description: ~
 roles:
-
-  - id: meta_pad
+  - name: meta-pad
     provisioning:
       strategy: create
       deferred: false
     dna:
-      bundled: "../dna/workdir/meta_pad.dna"
-      properties: ~
-      uuid: ~
+      bundled: "../dnas/meta-pad/workdir/meta_pad.dna"
+      modifiers:
+        network_seed: ~
+        properties: ~
+        origin_time: ~
+        quantum_time: ~
       version: ~
       clone_limit: 0
 

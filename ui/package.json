@@ -2,8 +2,8 @@
   "name": "meta-pad",
   "version": "0.0.0",
   "scripts": {
-    "start": "VITE_HC_PORT=$HC_PORT vite",
     "build": "vue-tsc --noEmit && vite build",
+    "build:watch": "concurrently \"vue-tsc --noEmit --watch\" \"vite build --watch --clearScreen false\"",
     "preview": "vite preview",
     "package": "npm run build && cd dist && bestzip ../dist.zip *"
   },
@@ -18,9 +18,10 @@
     "@editorjs/quote": "^2.4.0",
     "@editorjs/raw": "^2.3.1",
     "@editorjs/table": "^2.0.4",
-    "@holochain-open-dev/elements": "^0.0.1",
-    "@holochain-open-dev/utils": "^0.4.3",
-    "@holochain/client": "^0.7.0",
+    "@holochain-open-dev/elements": "^0.1.2",
+    "@holochain-open-dev/utils": "^0.7.2",
+    "@holochain/client": "^0.11.9",
+    "@iconify-icons/mdi": "^1.2.37",
     "@material/mwc-button": "^0.25.3",
     "@material/mwc-circular-progress": "^0.25.3",
     "@msgpack/msgpack": "^2.7.2",

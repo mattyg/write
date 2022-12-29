@@ -18,7 +18,7 @@
         <div class="flex flex-col items-end">
           <button class="text-md p-2 text-gray-800 font-bold bg-green-200 hover:bg-green-300 rounded" @click="saveContent">
             <div class="flex space-x-2">
-              <Icon icon="mdi:content-save-outline" height="24" color="black" />
+              <Icon :icon="icons.contentSaveOutline" height="24" color="black" />
               <div>Save</div>
             </div>
           </button>
@@ -33,8 +33,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, inject, ComputedRef } from 'vue';
-import { decode } from '@msgpack/msgpack';
-import { InstalledCell, AppWebsocket, InstalledAppInfo, Record, ActionHash } from '@holochain/client';
+import {  Record, ActionHash, AppAgentClient } from '@holochain/client';
 import { Pad } from '../types/meta_pad/pad';
 import '@type-craft/title/title-detail';
 import '@type-craft/content/content-detail';
@@ -51,12 +50,16 @@ import ZomeCallBlock from '../lib/zome-call-block.ts';
 import fromUnixTime from 'date-fns/fromUnixTime';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow'
 import "@holochain-open-dev/elements/holo-identicon";
-import { Icon } from '@iconify/vue';
+import { decode } from '@msgpack/msgpack';
+import { Icon } from '@iconify/vue/dist/offline';
+import contentSaveOutline from '@iconify-icons/mdi/content-save-outline';
 
 interface Data {
-  pad: Pad | undefined;
-  editorjs: EditorJS | undefined;
-  latestActionHash: ActionHash | undefined;
+  record?: Record;
+  editorjs?: EditorJS;
+  latestActionHash?: ActionHash;
+  error?: any;
+  icons: any;
 }
 
 export default defineComponent({
@@ -71,9 +74,13 @@ export default defineComponent({
   },
   data(): Data {
     return {
-      pad: undefined,
+      record: undefined,
       editorjs: undefined,
-      latestActionHash: undefined
+      latestActionHash: undefined,
+      error: undefined,
+      icons: {
+        contentSaveOutline
+      }
     }
   },
   computed: {
@@ -83,9 +90,14 @@ export default defineComponent({
       return formatDistanceToNow(fromUnixTime(this.contentObj.time/1000));
     },
     contentObj() {
-      if(!this.pad || this.pad.content === "") return {};
+      if(!this.pad || this.pad?.content === "") return {};
 
       return JSON.parse(this.pad.content);
+    },
+    pad() {
+      if (!this.record) return undefined;
+
+      return decode((this.record.entry as any).Present.entry) as Pad;
     }
   },
   methods: {
@@ -95,12 +107,10 @@ export default defineComponent({
       const value = await this.editorjs.save();
       console.log('save', value);
       
-      const cellData = this.appInfo.cell_data.find((c: InstalledCell) => c.role_id === 'meta_pad')!;
-
-      this.latestActionHash = await this.appWebsocket.callZome({
+      this.latestActionHash = await this.client.callZome({
         cap_secret: null,
-        cell_id: cellData.cell_id,
-        zome_name: 'pad',
+        role_name: 'meta-pad',
+        zome_name: 'pads',
         fn_name: 'update_pad',
         payload: {
           original_action_hash: deserializeHash(this.actionHashString),
@@ -109,28 +119,25 @@ export default defineComponent({
             content: JSON.stringify(value),
           }
         },
-        provenance: cellData.cell_id[1]
       });
 
       console.log('Saved. New Action Hash', this.latestActionHash);
       this.fetchPad()
     },
     async fetchPad() {
-      const cellData = this.appInfo.cell_data.find((c: InstalledCell) => c.role_id === 'meta_pad')!;
+      try {
+        console.log('hash', deserializeHash(this.actionHashString));
+        this.record = await this.client.callZome({
+          cap_secret: null,
+          role_name: 'meta-pad',
+          zome_name: 'pads',
+          fn_name: 'get_pad_latest',
+          payload: deserializeHash(this.actionHashString),
+        });
 
-      const record: Record | undefined = await this.appWebsocket.callZome({
-        cap_secret: null,
-        cell_id: cellData.cell_id,
-        zome_name: 'pad',
-        fn_name: 'get_pad_latest',
-        payload: deserializeHash(this.actionHashString),
-        provenance: cellData.cell_id[1]
-      });
-
-      console.log('fetching', record);
-
-      if (record) {
-        this.pad = decode((record.entry as any).Present.entry) as Pad;
+        console.log('record is ', this.record);
+      } catch (err) {
+        this.error = err;
       }
     },
     setupEditorjs() {
@@ -177,12 +184,11 @@ export default defineComponent({
     this.fetchPad();
   },
   setup() {
-    const appWebsocket = (inject('appWebsocket') as ComputedRef<AppWebsocket>).value;
-    const appInfo = (inject('appInfo') as ComputedRef<InstalledAppInfo>).value;
-    return {
-      appInfo,
-      appWebsocket,
-    };
+      const client = (inject('client') as ComputedRef<AppAgentClient>).value;
+      
+      return {
+        client,
+      };
   },
 })
 </script>

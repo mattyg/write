@@ -2,8 +2,8 @@
 mod pad;
 pub use pad::*;
 use hdk::prelude::*;
-use pad_integrity::EntryTypes;
-use pad_integrity::Anchor;
+use pads_integrity::EntryTypes;
+use pads_integrity::Anchor;
 
 
 #[hdk_extern]

@@ -8,11 +8,14 @@
       </div>
     </div>
   </div>
+  <div v-else-if="error" class="bg-red-400">
+    Error: {{ error.data }}
+  </div>
 </template>
 <script lang="ts">
 import { defineComponent, inject, ComputedRef } from 'vue';
 import { decode } from '@msgpack/msgpack';
-import { InstalledCell, AppWebsocket, InstalledAppInfo, Record } from '@holochain/client';
+import { InstalledCell, AppWebsocket, Record, AppAgentClient } from '@holochain/client';
 import { Pad } from '../../../types/meta_pad/pad';
 import '@type-craft/title/title-detail';
 import '@type-craft/content/content-detail';
@@ -20,51 +23,52 @@ import '@material/mwc-circular-progress';
 import { AgentPubKeyMap, serializeHash } from '@holochain-open-dev/utils';
 
 interface Data {
-  pad: Pad | undefined;
+  record?: Record;
+  error?: any;
 }
 
 export default defineComponent({
   props: {
     actionHash: {
-      type: Uint8Array,
       required: true
     }
   },
   data(): Data {
     return {
-      pad: undefined,
+      record: undefined,
+      error: undefined,
     }
   },
   computed: {
     actionHashString() {
-      return serializeHash(this.actionHash);
+      return serializeHash(this.actionHash as Uint8Array);
+    },
+    pad() {
+      if (!this.record) return undefined;
+
+      return decode((this.record.entry as any).Present.entry) as Pad;
     }
   },
   async mounted() {
-    const cellData = this.appInfo.cell_data.find((c: InstalledCell) => c.role_id === 'meta_pad')!;
 
-    const record: Record | undefined = await this.appWebsocket.callZome({
-      cap_secret: null,
-      cell_id: cellData.cell_id,
-      zome_name: 'pad',
-      fn_name: 'get_pad',
-      payload: this.actionHash,
-      provenance: cellData.cell_id[1]
-    });
-    
-    if (record) {
-      this.pad = decode((record.entry as any).Present.entry) as Pad;
+    try {
+      this.record = await this.client.callZome({
+        cap_secret: null,
+        role_name: 'meta-pad',
+        zome_name: 'pads',
+        fn_name: 'get_pad',
+        payload: this.actionHash,
+      });
+    } catch(e) {
+      this.error = e;
     }
-
-
   },
   setup() {
-    const appWebsocket = (inject('appWebsocket') as ComputedRef<AppWebsocket>).value;
-    const appInfo = (inject('appInfo') as ComputedRef<InstalledAppInfo>).value;
-    return {
-      appInfo,
-      appWebsocket,
-    };
+      const client = (inject('client') as ComputedRef<AppAgentClient>).value;
+      
+      return {
+        client,
+      };
   },
 })
 </script>

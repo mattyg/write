@@ -24,7 +24,7 @@ export default () => test("pad CRUD tests", async (t) => {
 
     // Alice creates a pad
     const createActionHash: ActionHash = await alice.cells[0].callZome({
-      zome_name: "pad",
+      zome_name: "pads",
       fn_name: "create_pad",
       payload: createInput,
     });
@@ -35,7 +35,7 @@ export default () => test("pad CRUD tests", async (t) => {
 
     // Alice lists her authored pads
     const aliceAuthoredPads = await bob.cells[0].callZome({
-      zome_name: "pad",
+      zome_name: "pads",
       fn_name: "list_my_authored_pads",
       payload: (),
     });
@@ -44,7 +44,7 @@ export default () => test("pad CRUD tests", async (t) => {
 
     // Bob gets the created pad
     const createReadOutput: Record = await bob.cells[0].callZome({
-      zome_name: "pad",
+      zome_name: "pads",
       fn_name: "get_pad",
       payload: createActionHash,
     });
@@ -63,7 +63,7 @@ export default () => test("pad CRUD tests", async (t) => {
     };
 
     const updateActionHash: ActionHash = await alice.cells[0].callZome({
-      zome_name: "pad",
+      zome_name: "pads",
       fn_name: "update_pad",
       payload: updateInput,
     });
@@ -75,7 +75,7 @@ export default () => test("pad CRUD tests", async (t) => {
       
     // Bob gets the updated pad
     const readUpdatedOutput: Record = await bob.cells[0].callZome({
-      zome_name: "pad",
+      zome_name: "pads",
       fn_name: "get_pad",
       payload: updateActionHash,
     });
@@ -85,7 +85,7 @@ export default () => test("pad CRUD tests", async (t) => {
     
     // Alice deletes the pad
     const deleteActionHash = await alice.cells[0].callZome({
-      zome_name: "pad",
+      zome_name: "pads",
       fn_name: "delete_pad",
       payload: createActionHash,
     });
@@ -97,7 +97,7 @@ export default () => test("pad CRUD tests", async (t) => {
 
     // Bob tries to get the deleted pad, but he doesn't get it because it has been deleted
     const readDeletedOutput = await bob.cells[0].callZome({
-      zome_name: "pad",
+      zome_name: "pads",
       fn_name: "get_pad",
       payload: createActionHash,
     });

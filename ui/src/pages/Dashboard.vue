@@ -13,7 +13,7 @@
 <script lang="ts">
 import { defineComponent, inject, ComputedRef } from 'vue';
 import { decode } from '@msgpack/msgpack';
-import { InstalledCell, AppWebsocket, InstalledAppInfo, Record, ActionHash } from '@holochain/client';
+import { ActionHash, AppAgentClient } from '@holochain/client';
 import PadListItem from '../components/meta_pad/pad/PadListItem.vue';
 import PadsList from '../components/meta_pad/pad/PadsList.vue';
 import { difference } from 'lodash';
@@ -43,15 +43,12 @@ export default defineComponent({
     },
     methods: {
         async fetchMyPads() {
-            const cellData = this.appInfo.cell_data.find((c: InstalledCell) => c.role_id === 'meta_pad')!;
-
-            const action_hashes: ActionHash[] = await this.appWebsocket.callZome({
+            const action_hashes: ActionHash[] = await this.client.callZome({
                 cap_secret: null,
-                cell_id: cellData.cell_id,
-                zome_name: 'pad',
+                role_name: 'meta-pad',
+                zome_name: 'pads',
                 fn_name: 'list_my_authored_pads',
                 payload: null,
-                provenance: cellData.cell_id[1]
             });
             console.log('my pads', action_hashes);
 
@@ -61,15 +58,12 @@ export default defineComponent({
             }
         },
         async fetchAllPads() {
-            const cellData = this.appInfo.cell_data.find((c: InstalledCell) => c.role_id === 'meta_pad')!;
-
-            const action_hashes: ActionHash[] = await this.appWebsocket.callZome({
+            const action_hashes: ActionHash[] = await this.client.callZome({
                 cap_secret: null,
-                cell_id: cellData.cell_id,
-                zome_name: 'pad',
+                role_name: 'meta-pad',
+                zome_name: 'pads',
                 fn_name: 'list_all_pads',
                 payload: null,
-                provenance: cellData.cell_id[1]
             });
             console.log('all pads', action_hashes);
             
@@ -83,11 +77,10 @@ export default defineComponent({
         this.fetchAllPads();
     },
     setup() {
-        const appWebsocket = (inject('appWebsocket') as ComputedRef<AppWebsocket>).value;
-        const appInfo = (inject('appInfo') as ComputedRef<InstalledAppInfo>).value;
+        const client = (inject('client') as ComputedRef<AppAgentClient>).value;
+        
         return {
-            appInfo,
-            appWebsocket,
+          client,
         };
     },
 })

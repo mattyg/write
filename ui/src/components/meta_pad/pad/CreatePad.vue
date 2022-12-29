@@ -22,7 +22,7 @@
 <script lang="ts">
 import '@material/mwc-button';
 import { defineComponent, inject, ComputedRef } from 'vue';
-import { InstalledCell, AppWebsocket, InstalledAppInfo } from '@holochain/client';
+import { InstalledCell, AppWebsocket, AppAgentClient } from '@holochain/client';
 import { Pad, PadCreateInput} from '../../../types/meta_pad/pad';
 import '@type-craft/title/create-title';
 import '@type-craft/content/create-content';
@@ -40,19 +40,16 @@ export default defineComponent({
       return this.title
     },
     async createPad() {
-      const cellData = this.appInfo.cell_data.find((c: InstalledCell) => c.role_id === 'meta_pad')!;
-
       const pad: PadCreateInput = {
         title: this.title!,
       };
 
-      const actionHash = await this.appWebsocket.callZome({
+      const actionHash = await this.client.callZome({
         cap_secret: null,
-        cell_id: cellData.cell_id,
-        zome_name: 'pad',
+        role_name: 'meta-pad',
+        zome_name: 'pads',
         fn_name: 'create_pad',
         payload: pad,
-        provenance: cellData.cell_id[1]
       });
 
       this.$emit('pad-created', actionHash);
@@ -60,12 +57,11 @@ export default defineComponent({
   },
   emits: ['pad-created'],
   setup() {
-    const appWebsocket = (inject('appWebsocket') as ComputedRef<AppWebsocket>).value;
-    const appInfo = (inject('appInfo') as ComputedRef<InstalledAppInfo>).value;
-    return {
-      appInfo,
-      appWebsocket,
-    };
+      const client = (inject('client') as ComputedRef<AppAgentClient>).value;
+      
+      return {
+        client,
+      };
   },
 })
 </script>

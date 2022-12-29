@@ -1,8 +1,8 @@
 use hdk::prelude::*;
-use pad_integrity::Pad;
-use pad_integrity::Anchor;
-use pad_integrity::EntryTypes;
-use pad_integrity::LinkTypes;
+use pads_integrity::Pad;
+use pads_integrity::Anchor;
+use pads_integrity::EntryTypes;
+use pads_integrity::LinkTypes;
 
 #[hdk_extern]
 pub fn get_pad(action_hash: ActionHash) -> ExternResult<Option<Record>> {
@@ -11,7 +11,7 @@ pub fn get_pad(action_hash: ActionHash) -> ExternResult<Option<Record>> {
 
 #[hdk_extern]
 pub fn get_pad_latest(action_hash: ActionHash) -> ExternResult<Option<Record>> {
-  let maybe_details: Option<Details> = get_details(action_hash, GetOptions::default())?;
+  let maybe_details: Option<Details> = get_details(action_hash, GetOptions::latest())?;
 
   if let Some(Details::Record(details)) = maybe_details {
 

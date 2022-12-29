@@ -1,9 +1,16 @@
 [workspace]
-resolver = "2"
-members = [
-  "dna/integrity_zomes/*",
-  "dna/coordinator_zomes/*"
-]
+members = ["dnas/*/zomes/coordinator/*", "dnas/*/zomes/integrity/*"]
+
+[workspace.dependencies]
+hdi = "0.2.0-beta-rc.1"
+hdk = "0.1.0-beta-rc.1"
+serde = "1"
+
+[workspace.dependencies.pads]
+path = "dnas/meta-pad/zomes/coordinator/pads"
+
+[workspace.dependencies.pads_integrity]
+path = "dnas/meta-pad/zomes/integrity/pads"
 
 [profile.dev]
 opt-level = "z"
