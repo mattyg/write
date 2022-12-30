@@ -1,14 +1,21 @@
 <template>
-  <div v-if="pad" class="flex justify-between items-center cursor-pointer w-64"  @click="$router.push(`/pad/${actionHashString}`)" >
-    <div class="w-full mr-8 text-lg bg-gray-200 hover:bg-blue-400 text-black p-2 rounded flex items-center justify-start">
-      <holo-identicon v-if="actionHash" :hash="actionHashString"></holo-identicon>
+  <div v-if="pad" class="flex justify-start items-center cursor-pointer w-full h-32 bg-base-200 shadow-lg"  @click="$router.push(`/pad/${actionHashString}`)" >
+      <holo-identicon v-if="actionHash" :hash="actionHashString" class="h-16 w-16"></holo-identicon>
+      <div>
+        <h2 class="text-5xl flex-1 mb-4">
+          {{pad.title}}
+        </h2>
 
-      <div class="w-full text-center">
-        {{pad.title}}
+        <div v-if="isAuthor">
+          <div class="text-md badge badge-lg gap-2">Author</div>
+        </div>
+        <div v-else-if="author" class="text-sm color-neutral">
+          {{ author }}
+        </div>
       </div>
-    </div>
+      
   </div>
-  <div v-else-if="error" class="bg-red-400">
+  <div v-else-if="error" class="bg-red-400 w-full">
     Error: {{ error.data }}
   </div>
 </template>
@@ -21,10 +28,12 @@ import '@type-craft/title/title-detail';
 import '@type-craft/content/content-detail';
 import '@material/mwc-circular-progress';
 import { AgentPubKeyMap, serializeHash } from '@holochain-open-dev/utils';
+import "@holochain-open-dev/elements/holo-identicon";
 
 interface Data {
   record?: Record;
   error?: any;
+  appInfo?: any;
 }
 
 export default defineComponent({
@@ -37,6 +46,7 @@ export default defineComponent({
     return {
       record: undefined,
       error: undefined,
+      appInfo: undefined,
     }
   },
   computed: {
@@ -47,11 +57,24 @@ export default defineComponent({
       if (!this.record) return undefined;
 
       return decode((this.record.entry as any).Present.entry) as Pad;
+    },
+    author() {
+      if (!this.pad) return undefined;
+
+      return serializeHash(this.pad.author);
+    },
+    isAuthor() {
+      if(!this.appInfo || !this.pad) return false;
+      console.log(this.appInfo);
+      return true;
     }
   },
   async mounted() {
-
     try {
+      this.appInfo = await this.client.appInfo();
+
+      console.log('app info ', this.appInfo);
+
       this.record = await this.client.callZome({
         cap_secret: null,
         role_name: 'meta-pad',

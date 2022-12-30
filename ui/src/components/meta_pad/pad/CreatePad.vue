@@ -5,17 +5,15 @@
     </div>
 
     <div class="mb-4">
-      <create-title       
-        @change="title = $event.target.value"
-      ></create-title>
+      <input class="input" v-model="title" />
     </div>
     
     <div>
-      <mwc-button 
-        label="Create Pad"
+      <button 
+        className="btn btn-primary gap-2"
         :disabled="!isPadValid()"
         @click="createPad()"
-      ></mwc-button>
+      >Create Pad</button>
     </div>
   </div>
 </template>
@@ -25,13 +23,11 @@ import { defineComponent, inject, ComputedRef } from 'vue';
 import { InstalledCell, AppWebsocket, AppAgentClient } from '@holochain/client';
 import { Pad, PadCreateInput} from '../../../types/meta_pad/pad';
 import '@type-craft/title/create-title';
-import '@type-craft/content/create-content';
 
 export default defineComponent({
   data(): Partial<Pad> {
     return {
       title: undefined,
-      content: undefined
     }
   },
 
@@ -53,6 +49,7 @@ export default defineComponent({
       });
 
       this.$emit('pad-created', actionHash);
+      this.title = undefined;
     },
   },
   emits: ['pad-created'],

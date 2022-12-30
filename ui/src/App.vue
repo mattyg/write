@@ -3,27 +3,27 @@
     <div v-if="loading" class="w-screen h-screen flex justify-center items-center">
       <mwc-circular-progress indeterminate></mwc-circular-progress>
     </div>
-    <div v-else class="flex flex-1 flex-col">
-      <div class="fixed w-full bg-black text-white font-bold flex justify-between items-center py-2 px-4 h-12 z-30">
-        <div class="cursor-default hover:border-b-2 border-0 text-2xl" @click="$router.push('/');">Write</div>
-        <button @click="create_visible = true;" class="bg-green-700 hover:bg-green-800 text-lg text-white font-bold shadow rounded-md px-2 py-1 flex items-center space-x-2">
-          <Icon :icon="icons.pencil" />
-          <div>Create New Pad</div>
-        </button>
-      </div>
-
-      <RouterView />
-
-
-    <div v-show="create_visible" class="z-20">
-        <div class="absolute left-0 top-0 w-screen h-screen bg-gray-800 opacity-70 z-20" @click.prevent="create_visible = false;"></div>  
-        <div class="absolute left-0 top-0 w-screen h-screen  flex justify-center items-center">
-            <div class="bg-white opacity-100 z-30">
-                <CreatePad @pad-created="padCreated"/>
-            </div>
+    <div v-else class="flex flex-1 flex-col ">
+      <div className="navbar bg-base-200">
+        <div className="flex-1">
+          <a className="btn btn-ghost normal-case text-xl" @click="$router.push('/');">Write</a>
         </div>
+        <div className="flex-none">
+          <div className="dropdown dropdown-end">
+            <button tabIndex={0} className="btn btn-secondary gap-2">
+                <Icon :icon="icons.pencil" />
+                <div>Create Pad</div>
+            </button>
+            <div tabIndex={0} className="mt-3 card card-compact dropdown-content bg-base-300 shadow" :hidden="!create_visible">
+              <div className="card-body" >
+                <CreatePad @pad-created="padCreated"/>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <RouterView />
     </div>
-  </div>
   </div>
 </template>
 <script lang="ts">

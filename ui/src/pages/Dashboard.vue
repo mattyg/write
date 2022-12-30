@@ -1,8 +1,7 @@
 <template>
     <div class="m-4">
-        <div v-if="my_pads_action_hashes.length + all_pads_action_hashes.length > 0" class="flex flex-wrap justify-center space-x-16 my-24">
-           <PadsList v-if="my_pads_action_hashes.length > 0" :action_hashes="my_pads_action_hashes" title="My Pads" />
-           <PadsList v-if="otherPadHashes?.length > 0" :action_hashes="otherPadHashes" title="All Pads" />
+        <div v-if="my_pads_action_hashes.length + all_pads_action_hashes.length > 0" class="flex justify-center space-x-16 my-24 w-full">
+           <PadsList v-if="unionAllPadHashes.length > 0" :action_hashes="unionAllPadHashes" />
         </div>
         <div v-else class="flex flex-wrap justify-center space-x-16 my-24 text-2xl text-gray-400">
             No pads found...
@@ -16,13 +15,13 @@ import { decode } from '@msgpack/msgpack';
 import { ActionHash, AppAgentClient } from '@holochain/client';
 import PadListItem from '../components/meta_pad/pad/PadListItem.vue';
 import PadsList from '../components/meta_pad/pad/PadsList.vue';
-import { difference } from 'lodash';
+import { difference, union, orderBy } from 'lodash';
 import { serializeHash, deserializeHash } from '@holochain-open-dev/utils';
 
 
 interface Data {
-    my_pads_action_hashes: ActionHash[];
-    all_pads_action_hashes: ActionHash[];
+    my_pads_action_hashes: Uint8Array[];
+    all_pads_action_hashes: Uint8Array[];
 }
 
 export default defineComponent({
@@ -39,7 +38,10 @@ export default defineComponent({
     computed: {
         otherPadHashes() {
             return difference(this.all_pads_action_hashes.map((h) => serializeHash(h)), this.my_pads_action_hashes.map((h) => serializeHash(h))).map((h) => deserializeHash(h));
-        }
+        },
+        unionAllPadHashes() {
+            return union(this.my_pads_action_hashes.map((h) => serializeHash(h)), this.all_pads_action_hashes.map((h) => serializeHash(h))).map((h) => deserializeHash(h));
+        },
     },
     methods: {
         async fetchMyPads() {
@@ -72,9 +74,15 @@ export default defineComponent({
             }
         }
     },
-    async mounted() {
-        this.fetchMyPads();
-        this.fetchAllPads();
+    async mounted() { 
+        this.fetchAllPads(); 
+        this.fetchMyPads(); 
+
+        setTimeout(() => { 
+            console.log('fetching'); 
+            this.fetchAllPads(); 
+            this.fetchMyPads(); 
+        }, 5000);
     },
     setup() {
         const client = (inject('client') as ComputedRef<AppAgentClient>).value;

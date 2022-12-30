@@ -1,21 +1,13 @@
 <template>
-    <div>
-        <div v-if="action_hashes.length > 0">
-            <h1  class="text-2xl text-center text-4xl">{{title}}</h1>
-            <div class="flex justify-center">
-                <div class="flex flex-col max-w-screen-md">
-                    <div v-for="action_hash in action_hashes" class="max-w-screen-xl my-4">
-                        <PadListItem :actionHash="action_hash" />
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div v-else class="flex justify-center items-center">
-            <mwc-circular-progress indeterminate></mwc-circular-progress>
+    <div v-if="action_hashes.length > 0" class="w-full">
+        <h1 v-if="title" class="text-2xl text-center text-4xl">{{title}}</h1>
+        <div class="w-full my-4 flex flex-col space-y-8">
+            <PadListItem v-for="action_hash in action_hashes" :actionHash="action_hash"  />
         </div>
     </div>
-
-
+    <div v-else class="flex justify-center items-center w-full">
+        <mwc-circular-progress indeterminate></mwc-circular-progress>
+    </div>
 </template>
 
 <script lang="ts">
@@ -28,15 +20,13 @@ export default defineComponent({
     },
     props: {
         title: {
-            default: 'Pads'
+            default: undefined
         },
         action_hashes: {
             default: [],
         },
     },
-    setup () {
-        
-
+    setup () {        
         return {}
     }
 })

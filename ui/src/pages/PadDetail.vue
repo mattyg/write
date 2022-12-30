@@ -2,7 +2,7 @@
   <div v-if="!pad || !editorjs" style="flex justify-center items-center">
     <mwc-circular-progress indeterminate></mwc-circular-progress>
   </div>
-  <div v-else class="flex flex-col bg-yellow-100 pt-14 min-h-screen">
+  <div v-else class="flex flex-col pt-14 min-h-screen">
     <div class="flex justify-between items-center mx-8 my-4">
       <div class="my-4">
         <div class="text-start text-gray-800">
@@ -16,18 +16,18 @@
       
       <div>
         <div class="flex flex-col items-end">
-          <button class="text-md p-2 text-gray-800 font-bold bg-green-200 hover:bg-green-300 rounded" @click="saveContent">
+          <button class="btn btn-primary" @click="saveContent">
             <div class="flex space-x-2">
-              <Icon :icon="icons.contentSaveOutline" height="24" color="black" />
+              <Icon :icon="icons.contentSaveOutline"  />
               <div>Save</div>
             </div>
           </button>
-          <div v-if="pad && lastSaved" class="text-gray-400 text-xs">{{lastSaved}} ago</div>
+          <h6 v-if="pad && lastSaved" class="text-neutral">{{lastSaved}} ago</h6>
         </div>
       </div>
     </div>
 
-    <div class="w-full" id="editorjs"  @keyup.enter="saveContent"></div>
+    <div class="w-full mx-16" id="editorjs"  @keyup.enter="saveContent"></div>
     
   </div>
 </template>
