@@ -7,10 +7,10 @@ hdk = "0.1.0-beta-rc.1"
 serde = "1"
 
 [workspace.dependencies.pads]
-path = "dnas/meta-pad/zomes/coordinator/pads"
+path = "dnas/meta_pad/zomes/coordinator/pads"
 
 [workspace.dependencies.pads_integrity]
-path = "dnas/meta-pad/zomes/integrity/pads"
+path = "dnas/meta_pad/zomes/integrity/pads"
 
 [profile.dev]
 opt-level = "z"
